@@ -1,32 +1,42 @@
-use std::fs;
 use std::env;
-
-mod calcul;
+use std::fs;
+use std::process;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let filename = &args[1];
-    let content_file = fs::read_to_string(filename)
-        .expect("something went wrong reading the file");
+    let km = match args.len() {
+       2 => args[1].to_string(),
+       _ => {
+           println!("Program accept one argument");
+           process::exit(0)
+        }
+    };
+    let content_file = fs::read_to_string("../../my_data.csv")
+        .expect("Something went wrong reading the file");
 
-    let mut kms = Vec::new();
-    let mut prices = Vec::new();
-
-    for line in content_file.trim().split('\n') {
-        let line_split: Vec<&str> = line.split(',').collect(); 
-        match line_split[0].parse::<f32>() {
-            Ok(n) => kms.push(n),
+    let tetas: Vec<&str> = content_file.trim().split(',').collect();
+    let mut teta_zero: f32 = 0.0;
+    let mut teta_one: f32 = 0.0;
+    let km_f32: f32;
+    if tetas.len() == 2 {
+        match tetas[0].parse::<f32>() {
+            Ok(n) => teta_zero = n,
             Err(_) => (),
         }
-        match line_split[1].parse::<f32>() {
-            Ok(n) => prices.push(n),
+        match tetas[1].parse::<f32>() {
+            Ok(n) => teta_one = n,
             Err(_) => (),
         }
     }
-    println!("{:?}", kms);
-    println!("{:?}", prices);
-    
-    let teta_one = calcul::teta_one(&kms, &prices);
-    let teta_zero = calcul::teta_zero(&kms, &prices, teta_one);
-    println!("t1 => {}\nt0 => {}", teta_one, teta_zero);
+    match km.parse::<f32>() {
+        Ok(n) => km_f32 = n,
+        Err(_) => km_f32 = 0.0,
+    };
+
+    let mut result = teta_zero + teta_one * km_f32;
+    match result {
+       x if x < 0.0 => result = 0.0,
+       _ => (),
+    }
+    println!("estimated price is {}", result);
 }
