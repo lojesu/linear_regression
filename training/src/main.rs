@@ -1,10 +1,12 @@
 use std::env;
 use std::fs;
+use std::fs::File;
+use std::io::prelude::*;
 
 mod parse;
 mod calcul;
 
-fn main() {
+fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
     let filename = parse::filename(&args);
     let content_file = fs::read_to_string(filename)
@@ -31,5 +33,8 @@ fn main() {
     
     let teta_one = calcul::teta_one(&kms, &prices);
     let teta_zero = calcul::teta_zero(&kms, &prices, teta_one);
-    println!("t1 => {}\nt0 => {}", teta_one, teta_zero);
+
+    let mut f = File::create("../../my_data.csv")?;
+    f.write(format!("{},{}\n", teta_zero.to_string(), teta_one.to_string()).as_bytes())?;
+    Ok(())
 }
