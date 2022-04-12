@@ -25,7 +25,7 @@ pub fn content_file(s: String) -> String {
 
 pub fn check(kms: &Vec<f32>, prices: &Vec<f32>) {
     if kms.len() == 0 || prices.len() == 0 {
-        println!("your file vountain any value");
+        println!("your file countain any value");
         process::exit(0);
     }
 }

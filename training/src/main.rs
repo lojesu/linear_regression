@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, process};
 use std::fs;
 use std::fs::File;
 use std::io::prelude::*;
@@ -9,8 +9,13 @@ mod calcul;
 fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
     let filename = parse::filename(&args);
-    let content_file = fs::read_to_string(filename)
-        .expect("something went wrong reading the file");
+    let content_file = match fs::read_to_string(filename) {
+        Ok(content_file) => content_file,
+        Err(_) => {
+            println!("something went wrong reading the file");
+            process::exit(1);
+        }
+    };
 
     let mut kms = Vec::new();
     let mut prices = Vec::new();
@@ -34,7 +39,7 @@ fn main() -> std::io::Result<()> {
     let teta_one = calcul::teta_one(&kms, &prices);
     let teta_zero = calcul::teta_zero(&kms, &prices, teta_one);
 
-    let mut f = File::create("../../my_data.csv")?;
+    let mut f = File::create("../my_data.csv")?;
     f.write(format!("{},{}\n", teta_zero.to_string(), teta_one.to_string()).as_bytes())?;
     Ok(())
 }
