@@ -6,3 +6,6 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+csv = "1.1"
+plotters = "0.3.1"
+fast-float = "0.2"
