@@ -4,7 +4,7 @@ pub fn filename(args: &Vec<String>) -> String {
     match args.len() {
         2 => args[1].to_string(),
         _ => {
-            println!("Program accept one argument");
+            println!("Program need a csv file for training");
             process::exit(0)
         }
     }

@@ -2,7 +2,6 @@ use std::{env, process};
 use std::fs;
 use std::fs::File;
 use std::io::prelude::*;
-use std::cmp::max;
 
 mod parse;
 mod calcul;
@@ -25,6 +24,9 @@ fn main() -> std::io::Result<()> {
     for line in content_file.trim().split('\n') {
         let line_split: Vec<&str> = line.split(',').collect(); 
         if line_split.len() == 2 {
+            if line_split[0].len() == 0 && line_split[1].len() == 0 {
+                continue;
+            }
             if line_split[0].len() > 0 {
                 match line_split[0].parse::<f32>() {
                     Ok(n) => kms.push(n),
